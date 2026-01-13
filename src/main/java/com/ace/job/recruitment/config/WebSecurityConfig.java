@@ -30,7 +30,7 @@ public class WebSecurityConfig {
 
 	@Bean
 	public UserDetailsService userDetailsService() {
-		return new AppUserDetailsService();
+		return appUserDetailsService;
 	}
 
 	@Bean
@@ -66,15 +66,19 @@ public class WebSecurityConfig {
 				.antMatchers("/resend-reset-mail").permitAll().antMatchers("/validate-reset-token").permitAll()
 				.antMatchers("/reset-password").permitAll().antMatchers("/javascripts/forgot-password.js").permitAll()
 				.antMatchers("/", "/candidate/**", "/404", "/403", "/error-page").permitAll()
+				.antMatchers("/trials/**").hasAnyAuthority("Admin", "Default-Admin", "RESEARCH_ASSISTANT")
+		.antMatchers("/enroll/**").hasAnyAuthority("Admin", "Default-Admin", "RESEARCH_ASSISTANT", "PARTICIPANT")
+		.antMatchers("/subjects/**").hasAnyAuthority("Admin", "Default-Admin", "RESEARCH_ASSISTANT")
+		.antMatchers("/participant/**").hasAnyAuthority("PARTICIPANT")
 				.antMatchers("/hr/", "/profile/").hasAnyAuthority("Junior-HR", "Senior-HR", "Admin", "Default-Admin")
 				.antMatchers("/department/").hasAnyAuthority("Department-head", "Interviewer")
 				.antMatchers("/department-head/", "/profile/")
 				.hasAnyAuthority("Department-head", "Admin", "Default-Admin").antMatchers("/admin/", "/profile/")
 				.hasAnyAuthority("Admin", "Default-Admin").antMatchers("/interviewer/", "/profile/")
-				.hasAnyAuthority("Interviewer", "Admin", "Department-head", "Default-Admin")
-				.antMatchers("/senior-hr/**").hasAnyAuthority("Senior-HR", "Admin", "Default-Admin").anyRequest()
+				.hasAnyAuthority("Interviewer", "Admin", "Department-head", "Default-Admin").antMatchers("/senior-hr/**")
+				.hasAnyAuthority("Senior-HR", "Admin", "Default-Admin").anyRequest()
 				.authenticated())
-				.formLogin(form -> form.loginPage("/signin").loginProcessingUrl("/login").defaultSuccessUrl("/")
+				.formLogin(form -> form.loginPage("/login").loginProcessingUrl("/login").defaultSuccessUrl("/")
 						.successHandler(myCustomAuthenticationSuccessHandler()).permitAll())
 				.exceptionHandling(
 						exception -> exception.accessDeniedHandler((request, response, accessDeniedException) -> {
@@ -88,7 +92,12 @@ public class WebSecurityConfig {
 						}))
 				.sessionManagement(
 						sessionManagement -> sessionManagement.maximumSessions(-1).sessionRegistry(sessionRegistry()))
-				.logout(logout -> logout.logoutRequestMatcher(new AntPathRequestMatcher("/logout")).permitAll())
+				.logout(logout -> logout
+						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+						.logoutSuccessUrl("/login?logout")
+						.invalidateHttpSession(true)
+						.deleteCookies("JSESSIONID", "remember-me")
+						.permitAll())
 				.rememberMe().key("1122121").rememberMeParameter("remember-me").rememberMeCookieName("remember-me")
 				.userDetailsService(appUserDetailsService).tokenValiditySeconds(30 * 24 * 60 * 60);
 		return http.build();
@@ -102,7 +111,7 @@ public class WebSecurityConfig {
 	@Bean
 	public WebSecurityCustomizer webSecurityCustomizer() {
 		return web -> web.ignoring().antMatchers("/static/**", "/css/**", "/js/**", "/scss/**", "/fonts/**",
-				"/images/**", "/vendors/**", "javascripts/**");
+				"/images/**", "/vendors/**", "/javascripts/**", "/@vite/**");
 
 	}
 

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>编辑受试者 - 临床受试者智能匹配与管理系统</title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">编辑受试者</h3>
+									<h6 class="font-weight-normal mb-0">修改受试者信息</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 错误消息 -->
+					<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<span th:text="${error}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					
+					<div class="row">
+						<div class="col-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">受试者信息</h4>
+									<form class="forms-sample" th:action="@{/subjects/edit/{id}(id=${subject.id})}" method="post" th:object="${subject}">
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="name">姓名 <span class="text-danger">*</span></label>
+													<input type="text" class="form-control" id="name" th:field="*{name}" 
+														placeholder="请输入姓名" required>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="email">邮箱 <span class="text-danger">*</span></label>
+													<input type="email" class="form-control" id="email" th:field="*{email}" 
+														placeholder="请输入邮箱地址" required>
+												</div>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="age">年龄</label>
+													<input type="number" class="form-control" id="age" th:field="*{age}" 
+														placeholder="请输入年龄" min="0" max="150">
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="gender">性别</label>
+													<select class="form-control" id="gender" th:field="*{gender}">
+														<option value="">请选择</option>
+														<option value="M">男</option>
+														<option value="F">女</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label for="healthConditions">健康状况</label>
+											<textarea class="form-control" id="healthConditions" th:field="*{healthConditions}" 
+												rows="3" placeholder="请输入受试者的健康状况，例如：高血压、糖尿病等"></textarea>
+										</div>
+										
+										<div class="form-group">
+											<label for="medicalHistory">既往病史</label>
+											<textarea class="form-control" id="medicalHistory" th:field="*{medicalHistory}" 
+												rows="3" placeholder="请输入受试者的既往病史"></textarea>
+										</div>
+										
+										<div class="form-group">
+											<label for="password">密码（留空则不修改）</label>
+											<input type="password" class="form-control" id="password" th:field="*{password}" 
+												placeholder="如需修改密码请输入新密码">
+										</div>
+										
+										<button type="submit" class="btn btn-primary mr-2">
+											<i class="bi bi-check-circle"></i> 更新
+										</button>
+										<a th:href="@{/subjects}" class="btn btn-light">
+											<i class="bi bi-x-circle"></i> 取消
+										</a>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+</body>
+
+</html>

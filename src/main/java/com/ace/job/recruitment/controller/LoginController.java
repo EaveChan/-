@@ -41,7 +41,7 @@ public class LoginController {
 	@Autowired
 	private EmailTemplateLoader loader;
 
-	@GetMapping("signin")
+	@GetMapping("login")
 	public String loginPage(Authentication authentication) {
 		if (authentication != null) {
 			AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
@@ -51,11 +51,11 @@ public class LoginController {
 				return "redirect:/interviewer/candidates";
 			}
 			if (appUserDetails.getRole().equalsIgnoreCase("Default-Admin")
-					|| appUserDetails.getRole().equalsIgnoreCase("Admin")
-					|| appUserDetails.getRole().equalsIgnoreCase("Junior-Hr")
-					|| appUserDetails.getRole().equalsIgnoreCase("Senior-Hr")) {
+				|| appUserDetails.getRole().equalsIgnoreCase("Admin")
+				|| appUserDetails.getRole().equalsIgnoreCase("Junior-Hr")
+				|| appUserDetails.getRole().equalsIgnoreCase("Senior-Hr")) {
 
-				return "redirect:/hr/dashboard";
+				return "redirect:/dashboard";
 			}
 		}
 

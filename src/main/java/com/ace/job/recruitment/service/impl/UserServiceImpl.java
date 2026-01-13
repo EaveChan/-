@@ -1,5 +1,6 @@
 package com.ace.job.recruitment.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -67,7 +68,23 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public List<User> getInterviewers(int departmentId) {
-		return userRepository.findAllByDepartmentIdAndStatusIsFalse(departmentId);
+		// 临床试验系统不需要部门功能，返回空列表
+		return new ArrayList<>();
+	}
+
+	@Override
+	public User getUserByEmailSingle(String email) {
+		return userRepository.findByEmail(email);
+	}
+
+	@Override
+	public List<User> getUsersByRole(String role) {
+		return userRepository.findAllByRole(role);
+	}
+
+	@Override
+	public List<User> searchSubjects(String keyword) {
+		return userRepository.searchSubjects(keyword);
 	}
 
 }

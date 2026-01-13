@@ -34,87 +34,73 @@
 	<nav class="sidebar sidebar-offcanvas" id="sidebar"
 		th:fragment="sidebar">
 		<ul class="nav">
-			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Admin','Default-Admin','Senior-HR','Junior-HR')"><a
-				class="nav-link " th:href="@{/hr/dashboard}"> <i
-					class="bi bi-card-text menu-icon"></i> <span class="menu-title">Dashboard</span>
-			</a></li>
-
-			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Department-head','Interviewer')"><a
-				class="nav-link " th:href="@{/department/dashboard}"> <i
-					class="bi bi-card-text menu-icon"></i> <span class="menu-title">Dashboard</span>
-			</a></li>
+			<!-- 系统管理员端菜单 -->
 			<li class="nav-item"
 				sec:authorize="hasAnyAuthority('Admin','Default-Admin')"><a
-				class="nav-link " th:href="@{/admin/department-list}"> <i
-					class="bi bi-building menu-icon"></i> <span class="menu-title">Department</span>
+				class="nav-link " th:href="@{/admin/overview}"> <i class="bi bi-speedometer2 menu-icon"></i><span class="menu-title">系统概览</span>
 			</a></li>
-			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Admin','Junior-HR','Senior-HR','Default-Admin')"><a
-				class="nav-link " th:href="@{/hr/position-table}"> <i
-					class="bi bi-file-earmark-ppt menu-icon"></i> <span class="menu-title">Position</span>
-			</a></li>
+			
 			<li class="nav-item"
 				sec:authorize="hasAnyAuthority('Admin','Default-Admin')"><a
-				class="nav-link " th:href="@{/admin/users}"> <i class="bi bi-people menu-icon"></i><span class="menu-title">User</span>
+				class="nav-link " th:href="@{/admin/user-management/list}"> <i class="bi bi-people menu-icon"></i><span class="menu-title">用户管理</span>
 			</a></li>
+			
 			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Admin','Junior-HR','Senior-HR','Default-Admin')"><a
-				class="nav-link" data-toggle="collapse" href="#vacancy"
-				aria-expanded="false" aria-controls="vacancy"> <i
-					class="icon-paper menu-icon"></i> <span class="menu-title">Vacancy</span>
-					<i class="menu-arrow"></i>
-			</a>
-				<div class="collapse" id="vacancy">
-					<ul class="nav flex-column sub-menu">
-						<li class="nav-item"
-							sec:authorize="hasAnyAuthority('Admin','Junior-HR','Senior-HR','Default-Admin')"><a
-							class="nav-link" th:href="@{/hr/setup-add-vacancy}">Add
-								Vacancy</a></li>
-						<li class="nav-item"
-							sec:authorize="hasAnyAuthority('Admin','Junior-HR','Senior-HR','Default-Admin')"><a
-							class="nav-link" th:href="@{/hr/vacancy-list}">Vacancy List</a></li>
-					</ul>
-				</div></li>
-			<li class="nav-item" th:classappend="${hrCandidates == true ? 'active' : ''}"
-				sec:authorize="hasAnyAuthority('Admin','Junior-HR','Senior-HR','Default-Admin')"><a
-				class="nav-link " th:href="@{/hr/candidates/}"> <i
-					class="bi bi-people menu-icon"></i> <span class="menu-title">Candidate</span>
+				sec:authorize="hasAnyAuthority('Admin','Default-Admin')"><a
+				class="nav-link " th:href="@{/admin/roles}"> <i class="bi bi-shield-check menu-icon"></i><span class="menu-title">角色权限</span>
 			</a></li>
-
-			<li class="nav-item" th:classappend="${interviewerCandidates == true ? 'active' : ''}"
-				sec:authorize="hasAnyAuthority('Admin','Interviewer','Department-head','Default-Admin')"><a
-				class="nav-link " th:href="@{/interviewer/candidates/}"> <i
-					class="bi bi-person-check menu-icon"></i> <span class="menu-title"
-					style="font-size: 12px">Interview Candidate</span>
-			</a></li>
+			
+			<!-- 研究助理端菜单 -->
 			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Admin','Senior-HR','Default-Admin')"><a
-				class="nav-link " th:href="@{/senior-hr/canceled-candidates}"> <i
-					class="bi bi-person-slash menu-icon"></i> <span class="menu-title"
-					style="font-size: 12px">Canceled Candidate</span>
+				sec:authorize="hasAnyAuthority('RESEARCH_ASSISTANT')"><a
+				class="nav-link " th:href="@{/}"> <i class="bi bi-house menu-icon"></i><span class="menu-title">首页</span>
 			</a></li>
-
+			
 			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Admin','Junior-HR','Senior-HR','Default-Admin')"><a
-				class="nav-link " th:href="@{/hr/interview-list}"> <i
-					class="bi bi-person-vcard menu-icon"></i> <span class="menu-title">Interview</span>
+				sec:authorize="hasAnyAuthority('RESEARCH_ASSISTANT')"><a
+				class="nav-link " th:href="@{/dashboard}"> <i class="bi bi-bar-chart menu-icon"></i><span class="menu-title">数据仪表板</span>
 			</a></li>
+			
 			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Admin','Junior-HR','Senior-HR','Default-Admin')"><a
-				class="nav-link " th:href="@{/hr/mail-history}"> <i
-					class="bi bi-envelope menu-icon"></i> <span class="menu-title">Mail
-						History</span>
+				sec:authorize="hasAnyAuthority('RESEARCH_ASSISTANT')"><a
+				class="nav-link " th:href="@{/trials}"> <i class="bi bi-flask menu-icon"></i><span class="menu-title">临床试验管理</span>
 			</a></li>
+			
 			<li class="nav-item"
-				sec:authorize="hasAnyAuthority('Department-head')"><a
-				class="nav-link " th:href="@{/department-head/users}"> <i
-					class="bi bi-people menu-icon"></i> <span class="menu-title">Department
-						Employees</span>
+				sec:authorize="hasAnyAuthority('RESEARCH_ASSISTANT')"><a
+				class="nav-link " th:href="@{/subjects}"> <i class="bi bi-heart-pulse menu-icon"></i><span class="menu-title">受试者管理</span>
 			</a></li>
-
-
+			
+			<li class="nav-item"
+				sec:authorize="hasAnyAuthority('RESEARCH_ASSISTANT')"><a
+				class="nav-link " th:href="@{/matching}"> <i class="bi bi-diagram-3 menu-icon"></i><span class="menu-title">智能匹配</span>
+			</a></li>
+			
+			<li class="nav-item"
+				sec:authorize="hasAnyAuthority('RESEARCH_ASSISTANT')"><a
+				class="nav-link " th:href="@{/enroll/enrollments}"> <i class="bi bi-clipboard-check menu-icon"></i><span class="menu-title">入组管理</span>
+			</a></li>
+			
+			<!-- 受试者端菜单 -->
+			<li class="nav-item"
+				sec:authorize="hasAnyAuthority('PARTICIPANT')"><a
+				class="nav-link " th:href="@{/participant}"> <i class="bi bi-house menu-icon"></i><span class="menu-title">首页</span>
+			</a></li>
+			
+			<li class="nav-item"
+				sec:authorize="hasAnyAuthority('PARTICIPANT')"><a
+				class="nav-link " th:href="@{/participant/trials}"> <i class="bi bi-flask menu-icon"></i><span class="menu-title">临床试验</span>
+			</a></li>
+			
+			<li class="nav-item"
+				sec:authorize="hasAnyAuthority('PARTICIPANT')"><a
+				class="nav-link " th:href="@{/participant/my-applications}"> <i class="bi bi-clipboard-check menu-icon"></i><span class="menu-title">我的报名</span>
+			</a></li>
+			
+			<li class="nav-item"
+				sec:authorize="hasAnyAuthority('PARTICIPANT')"><a
+				class="nav-link " th:href="@{/participant/profile}"> <i class="bi bi-person menu-icon"></i><span class="menu-title">个人信息</span>
+			</a></li>
 		</ul>
 	</nav>
 	

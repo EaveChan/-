@@ -15,16 +15,26 @@ import com.ace.job.recruitment.entity.User;
 public interface UserRepository extends JpaRepository<User, Integer>, DataTablesRepository<User, Integer> {
 	List<User> findAllByEmail(String email);
 
-	List<User> findAllByDepartmentIdAndStatusIsFalse(int departmentId);
-
 	User findByEmail(String email);
 
 	User findByRole(String role);
 
 	User findAllByEmailAndStatusIsFalse(String email);
 
+	User findAllByEmailAndStatusIsTrue(String email);
+
 	@Modifying
 	@Query("UPDATE User u SET u.status = :status WHERE u.id = :userId")
 	void updateUserStatus(@Param("userId") int userId, @Param("status") Boolean status);
+
+	List<User> findAllByRole(String role);
+
+	@Query("SELECT u FROM User u WHERE u.role = 'SUBJECT' AND (u.name LIKE %:keyword% OR u.email LIKE %:keyword% OR u.healthConditions LIKE %:keyword% OR u.medicalHistory LIKE %:keyword%)")
+	List<User> searchSubjects(@Param("keyword") String keyword);
+
+	/**
+	 * 统计指定角色的用户数量
+	 */
+	long countByRole(String role);
 
 }

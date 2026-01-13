@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>智能匹配 - 临床受试者智能匹配与管理系统</title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+<style>
+/* 强制设置表格列宽 */
+.matching-table {
+	table-layout: fixed !important;
+	width: 100% !important;
+}
+
+.matching-table th:nth-child(1),
+.matching-table td:nth-child(1) {
+	width: 20% !important;
+}
+
+.matching-table th:nth-child(2),
+.matching-table td:nth-child(2) {
+	width: 15% !important;
+	overflow: hidden !important;
+	text-overflow: ellipsis !important;
+	white-space: nowrap !important;
+}
+
+.matching-table th:nth-child(3),
+.matching-table td:nth-child(3) {
+	width: 12% !important;
+}
+
+.matching-table th:nth-child(4),
+.matching-table td:nth-child(4) {
+	width: 10% !important;
+}
+
+.matching-table th:nth-child(5),
+.matching-table td:nth-child(5) {
+	width: 10% !important;
+}
+
+.matching-table th:nth-child(6),
+.matching-table td:nth-child(6) {
+	width: 13% !important;
+}
+
+.matching-table th:nth-child(7),
+.matching-table td:nth-child(7) {
+	width: 20% !important;
+}
+</style>
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">智能匹配系统</h3>
+									<h6 class="font-weight-normal mb-0">基于AI算法为临床试验智能匹配合适的受试者</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 错误消息 -->
+					<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<span th:text="${error}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">选择临床试验</h4>
+									<p class="card-description">请选择一个临床试验以查看智能匹配结果</p>
+									
+									<div class="table-responsive">
+										<table class="table table-hover matching-table">
+											<thead>
+												<tr>
+													<th>试验名称</th>
+													<th>描述</th>
+													<th>年龄范围</th>
+													<th>性别要求</th>
+													<th>状态</th>
+													<th>招募进度</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="trial : ${trials}">
+													<td th:text="${trial.trialName}"></td>
+													<td th:text="${trial.trialDescription}"></td>
+													<td th:text="${trial.ageMin} + ' - ' + ${trial.ageMax}"></td>
+													<td>
+														<span th:if="${trial.genderRequirement == 'Any'}">不限</span>
+														<span th:if="${trial.genderRequirement == 'M'}">男</span>
+														<span th:if="${trial.genderRequirement == 'F'}">女</span>
+													</td>
+													<td>
+														<label class="badge badge-success">招募中</label>
+													</td>
+													<td>
+														<span th:text="${clinicalTrialService.getEnrolledCount(trial.id)} + ' / ' + ${trial.expectedSubjectCount}"></span>
+													</td>
+													<td>
+														<a th:href="@{/matching/trial/{id}(id=${trial.id})}" class="btn btn-sm btn-primary">
+															<i class="bi bi-diagram-3"></i> 查看匹配结果
+														</a>
+													</td>
+												</tr>
+												<tr th:if="${#lists.isEmpty(trials)}">
+													<td colspan="7" class="text-center">暂无招募中的临床试验</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 匹配算法说明 -->
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">智能匹配算法说明</h4>
+									<div class="row">
+										<div class="col-md-6">
+											<h6 class="font-weight-bold mb-3">匹配评分标准（0-100分）</h6>
+											<ul class="list-unstyled">
+												<li class="mb-2">
+													<i class="bi bi-check-circle text-success"></i>
+													<strong>基础分：60分</strong> - 满足年龄和性别要求
+												</li>
+												<li class="mb-2">
+													<i class="bi bi-star text-warning"></i>
+													<strong>年龄优先级：最多20分</strong> - 年龄越接近优先范围得分越高
+												</li>
+												<li class="mb-2">
+													<i class="bi bi-heart-pulse text-danger"></i>
+													<strong>健康状况匹配：最多20分</strong> - 健康状况关键词匹配度
+												</li>
+											</ul>
+										</div>
+										<div class="col-md-6">
+											<h6 class="font-weight-bold mb-3">匹配规则</h6>
+											<ul class="list-unstyled">
+												<li class="mb-2">
+													<i class="bi bi-x-circle text-danger"></i>
+													年龄不在范围内：<strong>0分（不匹配）</strong>
+												</li>
+												<li class="mb-2">
+													<i class="bi bi-x-circle text-danger"></i>
+													性别不符合要求：<strong>0分（不匹配）</strong>
+												</li>
+												<li class="mb-2">
+													<i class="bi bi-check-circle text-success"></i>
+													匹配分数 ≥ 60分：<strong>推荐入组</strong>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+</body>
+
+</html>

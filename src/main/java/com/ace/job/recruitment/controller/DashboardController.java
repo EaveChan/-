@@ -1,84 +1,63 @@
 package com.ace.job.recruitment.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ace.job.recruitment.dto.DashboardCountDTO;
-import com.ace.job.recruitment.entity.Department;
-import com.ace.job.recruitment.entity.Position;
-import com.ace.job.recruitment.model.AppUserDetails;
-import com.ace.job.recruitment.service.ChartService;
+import com.ace.job.recruitment.service.ClinicalTrialService;
 import com.ace.job.recruitment.service.DashboardService;
-import com.ace.job.recruitment.service.DepartmentService;
-import com.ace.job.recruitment.service.PositionService;
+import com.ace.job.recruitment.service.EnrollmentService;
+import com.ace.job.recruitment.service.SubjectService;
 
 @Controller
+@RequestMapping("/dashboard")
 public class DashboardController {
-	@Autowired
-	DashboardService dashboardService;
-	@Autowired
-	DepartmentService departmentService;
-	@Autowired
-	PositionService positionService;
-	@Autowired
-	ChartService chartService;
 
-	@GetMapping("/hr/dashboard")
+	@Autowired
+	private DashboardService dashboardService;
+
+	@Autowired
+	private ClinicalTrialService clinicalTrialService;
+
+	@Autowired
+	private SubjectService subjectService;
+
+	@Autowired
+	private EnrollmentService enrollmentService;
+
+	@GetMapping
 	public String showDashboardHR(Model model) {
 		int minYear = dashboardService.getMinYear();
+
+		// 添加临床试验统计数据
+		int totalTrials = clinicalTrialService.getAllTrials().size();
+		int activeTrials = clinicalTrialService.getActiveTrials().size();
+		int totalSubjects = subjectService.getAllSubjects().size();
+		long pendingEnrollments = enrollmentService.getPendingApplications().size();
+		long totalEnrollments = enrollmentService.getAllApplications().stream()
+				.filter(app -> "APPROVED".equals(app.getStatus()) || "ENROLLED".equals(app.getStatus())).count();
+
 		model.addAttribute("minYear", minYear);
-
-		List<Department> departmentListForChart = new ArrayList<Department>();
-		departmentListForChart = departmentService.getDepartments();
-		model.addAttribute("departmentListForChart", departmentListForChart);
-
-		List<Position> positionListForChart = new ArrayList<Position>();
-		positionListForChart = positionService.getAllPositions();
-		model.addAttribute("positionListForChart", positionListForChart);
+		model.addAttribute("totalTrials", totalTrials);
+		model.addAttribute("activeTrials", activeTrials);
+		model.addAttribute("totalSubjects", totalSubjects);
+		model.addAttribute("pendingEnrollments", pendingEnrollments);
+		model.addAttribute("totalEnrollments", totalEnrollments);
 
 		return "dashboard/dashboard";
 	}
 
-	@GetMapping("/hr/dashboard-counts/{year}")
-	public ResponseEntity<DashboardCountDTO> getDashboardCounts(@PathVariable("year") int year) {
-		DashboardCountDTO dashboardCountDTO = new DashboardCountDTO();
-		dashboardCountDTO = dashboardService.getDashboardCounts(year);
-		return ResponseEntity.ok(dashboardCountDTO);
+	@GetMapping("/counts")
+	@ResponseBody
+	public ResponseEntity<DashboardCountDTO> getDashboardCounts(@RequestParam int year) {
+		DashboardCountDTO dashboardCountDTO = dashboardService.getDashboardCounts(year);
+		return new ResponseEntity<>(dashboardCountDTO, HttpStatus.OK);
 	}
-
-	@GetMapping("/department/dashboard")
-	public String showDashboardByDepartment(Model model, Authentication authentication) {
-		int minYear = dashboardService.getMinYear();
-		model.addAttribute("minYear", minYear);
-
-		// get current department name
-		AppUserDetails appUserDetails = (AppUserDetails) authentication.getPrincipal();
-		String departmentName = appUserDetails.getUser().getDepartment().getName();
-
-		List<Position> positionListForChart = new ArrayList<Position>();
-		positionListForChart = positionService.getAllPositions();
-		model.addAttribute("positionListForChart", positionListForChart);
-		model.addAttribute("departmentName", departmentName);
-
-		return "dashboard/dashboard-department";
-	}
-
-	@GetMapping("/department/dashboard-counts/{year}")
-	public ResponseEntity<DashboardCountDTO> getDashboardCountsForDepartment(@PathVariable("year") int year,
-			Authentication authentication) {
-		int departmentId = chartService.getCurrentDepartmentId(authentication);
-
-		DashboardCountDTO dashboardCountDTO = new DashboardCountDTO();
-		dashboardCountDTO = dashboardService.getDashboardCountsForDepartment(year, departmentId);
-		return ResponseEntity.ok(dashboardCountDTO);
-	}
-
 }

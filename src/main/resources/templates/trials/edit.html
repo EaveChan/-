@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>编辑临床试验 - 临床受试者智能匹配与管理系统</title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">编辑临床试验</h3>
+									<h6 class="font-weight-normal mb-0">修改临床试验信息</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 错误消息 -->
+					<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<span th:text="${error}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					
+					<div class="row">
+						<div class="col-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">临床试验信息</h4>
+									<form class="forms-sample" th:action="@{/trials/edit/{id}(id=${trial.id})}" method="post" th:object="${trial}">
+										<div class="form-group">
+											<label for="trialName">试验名称 <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" id="trialName" th:field="*{trialName}" 
+												placeholder="请输入临床试验名称" required>
+										</div>
+										
+										<div class="form-group">
+											<label for="trialDescription">试验描述 <span class="text-danger">*</span></label>
+											<textarea class="form-control" id="trialDescription" th:field="*{trialDescription}" 
+												rows="4" placeholder="请输入临床试验详细描述" required></textarea>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="ageMin">最小年龄 <span class="text-danger">*</span></label>
+													<input type="number" class="form-control" id="ageMin" th:field="*{ageMin}" 
+														placeholder="例如：18" min="0" max="120" required>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="ageMax">最大年龄 <span class="text-danger">*</span></label>
+													<input type="number" class="form-control" id="ageMax" th:field="*{ageMax}" 
+														placeholder="例如：65" min="0" max="120" required>
+												</div>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label for="genderRequirement">性别要求 <span class="text-danger">*</span></label>
+											<select class="form-control" id="genderRequirement" th:field="*{genderRequirement}" required>
+												<option value="">请选择</option>
+												<option value="Any">不限</option>
+												<option value="M">男</option>
+												<option value="F">女</option>
+											</select>
+										</div>
+										
+										<div class="form-group">
+											<label for="requiredConditions">招募条件 <span class="text-danger">*</span></label>
+											<textarea class="form-control" id="requiredConditions" th:field="*{requiredConditions}" 
+												rows="3" placeholder="请输入受试者招募条件，例如：健康状况、疾病类型等" required></textarea>
+										</div>
+										
+										<div class="form-group">
+											<label for="exclusionCriteria">排除条件</label>
+											<textarea class="form-control" id="exclusionCriteria" th:field="*{exclusionCriteria}" 
+												rows="3" placeholder="请输入排除条件，例如：不适合参与试验的健康状况、疾病类型等"></textarea>
+										</div>
+										
+										<div class="form-group">
+											<label for="status">状态 <span class="text-danger">*</span></label>
+											<select class="form-control" id="status" th:field="*{status}" required>
+												<option value="Recruiting">招募中</option>
+												<option value="Full">已满</option>
+												<option value="Closed">已关闭</option>
+											</select>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="trialType">试验类型 <span class="text-danger">*</span></label>
+													<input type="text" class="form-control" id="trialType" th:field="*{trialType}" 
+														placeholder="例如：药物试验、疫苗试验" required>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="duration">持续时间（周） <span class="text-danger">*</span></label>
+													<input type="number" class="form-control" id="duration" th:field="*{duration}" 
+														placeholder="例如：12" min="1" required>
+												</div>
+											</div>
+										</div>
+										
+										<div class="row">
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="expectedSubjectCount">预期受试者数量 <span class="text-danger">*</span></label>
+													<input type="number" class="form-control" id="expectedSubjectCount" th:field="*{expectedSubjectCount}" 
+														placeholder="例如：100" min="1" required>
+												</div>
+											</div>
+											<div class="col-md-6">
+												<div class="form-group">
+													<label for="trialPhase">试验阶段</label>
+													<select class="form-control" id="trialPhase" th:field="*{trialPhase}">
+														<option value="">请选择</option>
+														<option value="Phase 1">Phase 1</option>
+														<option value="Phase 2">Phase 2</option>
+														<option value="Phase 3">Phase 3</option>
+														<option value="Phase 4">Phase 4</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										
+										<div class="form-group">
+											<label for="institution">研究机构</label>
+											<input type="text" class="form-control" id="institution" th:field="*{institution}" 
+												placeholder="请输入研究机构名称">
+										</div>
+										
+										<button type="submit" class="btn btn-primary mr-2">
+											<i class="bi bi-check-circle"></i> 更新
+										</button>
+										<a th:href="@{/trials}" class="btn btn-light">
+											<i class="bi bi-x-circle"></i> 取消
+										</a>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+</body>
+
+</html>

@@ -35,22 +35,14 @@ public class User {
 	private String role;
 	@Column(nullable = false)
 	private boolean status;
-	@ManyToOne
-	@JoinColumn(name = "department_id", nullable = true)
-	@JsonManagedReference
-	private Department department;
-
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-	@JsonBackReference
-	private List<MailHistory> mailHistories = new ArrayList<>();
-
-	public List<MailHistory> getMailHistories() {
-		return mailHistories;
-	}
-
-	public void setMailHistories(List<MailHistory> mailHistories) {
-		this.mailHistories = mailHistories;
-	}
+	@Column(nullable = true)
+	private Integer age;
+	@Column(length = 10, nullable = true)
+	private String gender;
+	@Column(columnDefinition = "TEXT", nullable = true)
+	private String healthConditions;
+	@Column(columnDefinition = "TEXT", nullable = true)
+	private String medicalHistory;
 
 	public int getId() {
 		return id;
@@ -100,12 +92,36 @@ public class User {
 		this.status = status;
 	}
 
-	public Department getDepartment() {
-		return department;
+	public Integer getAge() {
+		return age;
 	}
 
-	public void setDepartment(Department department) {
-		this.department = department;
+	public void setAge(Integer age) {
+		this.age = age;
+	}
+
+	public String getGender() {
+		return gender;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getHealthConditions() {
+		return healthConditions;
+	}
+
+	public void setHealthConditions(String healthConditions) {
+		this.healthConditions = healthConditions;
+	}
+
+	public String getMedicalHistory() {
+		return medicalHistory;
+	}
+
+	public void setMedicalHistory(String medicalHistory) {
+		this.medicalHistory = medicalHistory;
 	}
 
 	public User orElseThrow(Object object) {

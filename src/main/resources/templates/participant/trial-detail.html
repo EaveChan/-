@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<title>临床试验详情 - 临床受试者智能匹配系统</title>
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet" th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link rel="stylesheet" th:href="@{/css/participant-mobile.css}">
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/participant-sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">临床试验详情</h3>
+									<h6 class="font-weight-normal mb-0">了解试验详情并提交报名申请</h6>
+								</div>
+								<div class="col-12 col-xl-4">
+									<div class="justify-content-end d-flex">
+										<a th:href="@{/participant/trials}" class="btn btn-sm btn-light btn-icon-text border-0">
+											<i class="bi bi-arrow-left btn-icon-prepend"></i> 返回列表
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 成功/错误消息 -->
+					<div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+						<span th:text="${success}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<span th:text="${error}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					
+					<div class="row">
+						<!-- 试验详情 -->
+						<div class="col-md-7 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">试验基本信息</h4>
+									<div class="table-responsive">
+										<table class="table">
+											<tbody>
+												<tr>
+													<td class="font-weight-bold" style="width: 30%;">试验名称</td>
+													<td th:text="${trial.trialName}"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">试验描述</td>
+													<td th:text="${trial.trialDescription}"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">年龄范围</td>
+													<td th:text="${trial.ageMin} + ' - ' + ${trial.ageMax} + ' 岁'"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">性别要求</td>
+													<td>
+														<span th:if="${trial.genderRequirement == 'Any'}">不限</span>
+														<span th:if="${trial.genderRequirement == 'M'}">男</span>
+														<span th:if="${trial.genderRequirement == 'F'}">女</span>
+													</td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">招募条件</td>
+													<td th:text="${trial.requiredConditions}"></td>
+												</tr>
+												<tr th:if="${trial.exclusionCriteria != null}">
+													<td class="font-weight-bold">排除条件</td>
+													<td th:text="${trial.exclusionCriteria}"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">试验类型</td>
+													<td th:text="${trial.trialType}"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">持续时间</td>
+													<td th:text="${trial.duration} + ' 周'"></td>
+												</tr>
+												<tr th:if="${trial.institution != null}">
+													<td class="font-weight-bold">研究机构</td>
+													<td th:text="${trial.institution}"></td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<!-- 报名表单 -->
+						<div class="col-md-5 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">报名申请</h4>
+									
+									<!-- 如果已报名 -->
+									<div th:if="${existingApplication != null}">
+										<div class="alert alert-info">
+											<i class="bi bi-info-circle"></i> 您已报名此临床试验
+										</div>
+										<p><strong>报名时间：</strong> <span th:text="${#temporals.format(existingApplication.createdAt, 'yyyy-MM-dd HH:mm')}"></span></p>
+										<p><strong>当前状态：</strong> 
+											<span th:if="${existingApplication.status == 'PENDING'}" class="badge badge-warning">待审核</span>
+											<span th:if="${existingApplication.status == 'APPROVED'}" class="badge badge-success">已批准</span>
+											<span th:if="${existingApplication.status == 'REJECTED'}" class="badge badge-danger">已拒绝</span>
+											<span th:if="${existingApplication.status == 'ENROLLED'}" class="badge badge-primary">已入组</span>
+										</p>
+										<a th:href="@{/participant/my-applications}" class="btn btn-primary btn-block mt-3">
+											查看我的报名
+										</a>
+									</div>
+									
+									<!-- 报名表单 -->
+									<form th:if="${existingApplication == null}" th:action="@{/participant/trials/{id}/apply(id=${trial.id})}" method="post">
+										<div class="form-group">
+											<label>您的年龄</label>
+											<input type="number" class="form-control" th:value="${user.age}" readonly>
+											<small class="form-text text-muted">如需修改，请前往个人信息页面</small>
+										</div>
+										
+										<div class="form-group">
+											<label>您的性别</label>
+											<input type="text" class="form-control" th:value="${user.gender == 'M' ? '男' : (user.gender == 'F' ? '女' : '未设置')}" readonly>
+										</div>
+										
+										<div class="form-group">
+											<label for="healthConditions">健康状况描述 <span class="text-danger">*</span></label>
+											<textarea class="form-control" id="healthConditions" name="healthConditions" rows="4" 
+												placeholder="请详细描述您的健康状况，包括是否有慢性疾病、过敏史等" required 
+												th:text="${user.healthConditions}"></textarea>
+										</div>
+										
+										<div class="form-group">
+											<label for="medicalHistory">既往病史（选填）</label>
+											<textarea class="form-control" id="medicalHistory" name="medicalHistory" rows="3" 
+												placeholder="请描述您的既往病史" th:text="${user.medicalHistory}"></textarea>
+										</div>
+										
+										<div class="alert alert-warning">
+											<small><i class="bi bi-exclamation-triangle"></i> 提交报名后，系统将根据您的信息进行智能匹配评估</small>
+										</div>
+										
+										<button type="submit" class="btn btn-primary btn-block">
+											<i class="bi bi-check-circle"></i> 提交报名申请
+										</button>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- 移动端底部导航栏 -->
+	<div th:replace="fragments/participant-mobile-nav :: mobile-nav"></div>
+	
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+</body>
+
+</html>

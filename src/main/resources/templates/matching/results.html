@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>匹配结果 - 临床受试者智能匹配与管理系统</title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- Plugin css for this page -->
+<link rel="stylesheet"
+	th:href="@{/vendors/datatables.net-bs4/dataTables.bootstrap4.css}">
+<!-- End plugin css for this page -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+<style>
+.score-excellent {
+	background-color: #28a745;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-weight: bold;
+}
+.score-good {
+	background-color: #17a2b8;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-weight: bold;
+}
+.score-fair {
+	background-color: #ffc107;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-weight: bold;
+}
+.score-poor {
+	background-color: #dc3545;
+	color: white;
+	padding: 5px 10px;
+	border-radius: 5px;
+	font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">智能匹配结果</h3>
+									<h6 class="font-weight-normal mb-0" th:text="'临床试验：' + ${trial.trialName}"></h6>
+								</div>
+								<div class="col-12 col-xl-4">
+									<div class="justify-content-end d-flex">
+										<a th:href="@{/matching/trial/{id}/excluded(id=${trial.id})}" class="btn btn-sm btn-warning btn-icon-text border-0 mr-2">
+											<i class="bi bi-x-circle btn-icon-prepend"></i> 查看不符合条件
+										</a>
+										<a th:href="@{/matching}" class="btn btn-sm btn-light btn-icon-text border-0">
+											<i class="bi bi-arrow-left btn-icon-prepend"></i> 返回
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 临床试验信息卡片 -->
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<div class="row">
+										<div class="col-md-8">
+											<h4 class="card-title mb-3" th:text="${trial.trialName}"></h4>
+											<p class="card-description" th:text="${trial.trialDescription}"></p>
+										</div>
+										<div class="col-md-4">
+											<div class="text-right">
+												<p class="mb-2"><strong>年龄范围：</strong><span th:text="${trial.ageMin} + ' - ' + ${trial.ageMax} + ' 岁'"></span></p>
+												<p class="mb-2"><strong>性别要求：</strong>
+													<span th:if="${trial.genderRequirement == 'Any'}">不限</span>
+													<span th:if="${trial.genderRequirement == 'M'}">男</span>
+													<span th:if="${trial.genderRequirement == 'F'}">女</span>
+												</p>
+												<p class="mb-2"><strong>招募进度：</strong>
+													<span th:text="${clinicalTrialService.getEnrolledCount(trial.id)} + ' / ' + ${trial.expectedSubjectCount}"></span>
+												</p>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 匹配结果统计 -->
+					<div class="row">
+						<div class="col-md-3 mb-4 stretch-card transparent">
+							<div class="card card-tale">
+								<div class="card-body">
+									<p class="mb-4">总匹配数</p>
+									<p class="fs-30 mb-2" th:text="${#lists.size(matchingResults)}"></p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3 mb-4 stretch-card transparent">
+							<div class="card card-dark-blue">
+								<div class="card-body">
+									<p class="mb-4">优秀匹配 (≥80分)</p>
+									<p class="fs-30 mb-2" th:text="${#lists.size(matchingResults.?[matchingScore >= 80])}"></p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3 mb-4 stretch-card transparent">
+							<div class="card card-light-blue">
+								<div class="card-body">
+									<p class="mb-4">良好匹配 (70-79分)</p>
+									<p class="fs-30 mb-2" th:text="${#lists.size(matchingResults.?[matchingScore >= 70 && matchingScore < 80])}"></p>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-3 mb-4 stretch-card transparent">
+							<div class="card card-light-danger">
+								<div class="card-body">
+									<p class="mb-4">一般匹配 (60-69分)</p>
+									<p class="fs-30 mb-2" th:text="${#lists.size(matchingResults.?[matchingScore >= 60 && matchingScore < 70])}"></p>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 匹配结果列表 -->
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<p class="card-title mb-0">匹配受试者列表</p>
+									<div class="table-responsive">
+										<table class="table table-striped table-borderless" id="matchingTable">
+											<thead>
+												<tr>
+													<th>受试者编号</th>
+													<th>姓名</th>
+													<th>年龄</th>
+													<th>性别</th>
+													<th>健康状况</th>
+													<th>匹配分数</th>
+													<th>匹配说明</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="result : ${matchingResults}">
+													<td th:text="${result.subject.id}"></td>
+													<td th:text="${result.subject.name}"></td>
+													<td th:text="${result.subject.age}"></td>
+													<td>
+														<span th:if="${result.subject.gender == 'M'}">男</span>
+														<span th:if="${result.subject.gender == 'F'}">女</span>
+													</td>
+													<td th:text="${#strings.abbreviate(result.subject.healthConditions, 30)}"></td>
+													<td>
+														<span th:if="${result.matchingScore >= 80}" 
+															class="score-excellent" 
+															th:text="${result.matchingScore}">
+														</span>
+														<span th:if="${result.matchingScore >= 70 && result.matchingScore < 80}" 
+															class="score-good" 
+															th:text="${result.matchingScore}">
+														</span>
+														<span th:if="${result.matchingScore >= 60 && result.matchingScore < 70}" 
+															class="score-fair" 
+															th:text="${result.matchingScore}">
+														</span>
+														<span th:if="${result.matchingScore < 60}" 
+															class="score-poor" 
+															th:text="${result.matchingScore}">
+														</span>
+													</td>
+													<td th:text="${result.matchingExplanation}"></td>
+													<td>
+														<div class="d-flex flex-column gap-1">
+															<a th:href="@{/subjects/view/{id}(id=${result.subject.id})}" class="btn btn-sm btn-info mb-1">
+																<i class="bi bi-eye"></i> 查看
+															</a>
+															<form th:if="${result.matchingScore >= 60}" th:action="@{/enroll/apply}" method="post" class="mb-1">
+																<input type="hidden" name="subjectId" th:value="${result.subject.id}" />
+																<input type="hidden" name="trialId" th:value="${trial.id}" />
+																<button type="submit" class="btn btn-sm btn-success w-100">
+																	<i class="bi bi-check-circle"></i> 推荐入组
+																</button>
+															</form>
+															<form th:action="@{/enroll/reject-subject}" method="post" class="mb-1">
+																<input type="hidden" name="subjectId" th:value="${result.subject.id}" />
+																<input type="hidden" name="trialId" th:value="${trial.id}" />
+																<button type="submit" class="btn btn-sm btn-danger w-100" onclick="return confirm('确定要拒绝此受试者吗？')">
+																	<i class="bi bi-x-circle"></i> 拒绝
+																</button>
+															</form>
+															<form th:action="@{/enroll/mark-review}" method="post">
+																<input type="hidden" name="subjectId" th:value="${result.subject.id}" />
+																<input type="hidden" name="trialId" th:value="${trial.id}" />
+																<button type="submit" class="btn btn-sm btn-warning w-100">
+																	<i class="bi bi-flag"></i> 人工复核
+																</button>
+															</form>
+														</div>
+													</td>
+												</tr>
+												<tr th:if="${#lists.isEmpty(matchingResults)}">
+													<td colspan="8" class="text-center">暂无匹配的受试者</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- Plugin js for this page -->
+	<script th:src="@{/vendors/datatables.net/jquery.dataTables.js}"></script>
+	<script
+		th:src="@{/vendors/datatables.net-bs4/dataTables.bootstrap4.js}"></script>
+	<script th:src="@{/js/dataTables.select.min.js}"></script>
+	<!-- End plugin js for this page -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+	<script>
+		$(document).ready(function() {
+			$('#matchingTable').DataTable({
+				"order": [[ 5, "desc" ]], // 按匹配分数降序排列
+				"pageLength": 25,
+				"language": {
+					"url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Chinese.json"
+				}
+			});
+		});
+	</script>
+</body>
+
+</html>

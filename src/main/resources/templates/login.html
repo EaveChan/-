@@ -127,21 +127,29 @@
 					<div class="col-lg-4 mx-auto">
 						<div class="auth-form-light text-left py-5 px-4 px-sm-5">
 							<div class="brand-logo"
-								style="display: flex; justify-content: center; align-items: center;">
-								<img src="../../images/ACEDataSystemFull.jpg" alt="logo"
-									style="position: relative; margin: 0;">
+								style="display: flex; flex-direction: column; justify-content: center; align-items: center; margin-bottom: 20px;">
+								<div style="display: flex; align-items: center; gap: 10px;">
+									<i class="fas fa-heartbeat" style="font-size: 2.5rem; color: #667eea;"></i>
+									<div style="text-align: left;">
+										<h3 style="margin: 0; color: #667eea; font-weight: 700;">临床试验管理系统</h3>
+										<p style="margin: 0; font-size: 0.85rem; color: #764ba2;">Clinical Trial Management System</p>
+									</div>
+								</div>
 							</div>
 							<div class="error-message" th:if="${param.error}">
-								<h4 style="color: red">Check your email and password.</h4>
+								<h4 style="color: red">邮箱或密码错误，请重试。</h4>
 							</div>
 
 							<div class="ban-message" th:if="${param.deny}">
-								<h4 style="color: red">Your Account has been Ban.</h4>
+								<h4 style="color: red">您的账户已被禁用。</h4>
 							</div>
-							<div class="success-message" th:unless="${param.error}">
-								<div th:unless="${param.deny}">
-									<h4>Sign in to continue.</h4>
-								</div>
+							
+							<div class="success-message" th:if="${param.logout}">
+								<h4 style="color: green">您已成功退出登录。</h4>
+							</div>
+							
+							<div class="success-message" th:if="${param.error == null and param.deny == null and param.logout == null}">
+								<h4>登录以继续</h4>
 							</div>
 							<form class="pt-3" th:action="@{/login}" method="POST">
 								<div class="form-group">

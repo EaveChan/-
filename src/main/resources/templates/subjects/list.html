@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>受试者列表 - 临床受试者智能匹配与管理系统</title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- Plugin css for this page -->
+<link rel="stylesheet"
+	th:href="@{/vendors/datatables.net-bs4/dataTables.bootstrap4.css}">
+<!-- End plugin css for this page -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">受试者管理</h3>
+									<h6 class="font-weight-normal mb-0">管理所有受试者信息</h6>
+								</div>
+								<div class="col-12 col-xl-4">
+									<div class="justify-content-end d-flex">
+										<a th:href="@{/subjects/add}" class="btn btn-sm btn-primary btn-icon-text border-0">
+											<i class="ti-plus btn-icon-prepend"></i> 新建受试者
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 成功/错误消息 -->
+					<div th:if="${success}" class="alert alert-success alert-dismissible fade show" role="alert">
+						<span th:text="${success}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<span th:text="${error}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					
+					<!-- 筛选区域 -->
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<form th:action="@{/subjects}" method="get" class="form-inline">
+										<label class="mr-2">按状态筛选：</label>
+										<select name="status" class="form-control mr-2">
+											<option value="">全部</option>
+											<option value="ACTIVE" th:selected="${status == 'ACTIVE'}">活跃</option>
+											<option value="ENROLLED" th:selected="${status == 'ENROLLED'}">已入组</option>
+											<option value="REJECTED" th:selected="${status == 'REJECTED'}">已拒绝</option>
+											<option value="PENDING" th:selected="${status == 'PENDING'}">待审核</option>
+										</select>
+										<button type="submit" class="btn btn-primary">
+											<i class="bi bi-filter"></i> 筛选
+										</button>
+										<a th:href="@{/subjects}" class="btn btn-light ml-2">
+											<i class="bi bi-x-circle"></i> 清除
+										</a>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 搜索框 -->
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<form th:action="@{/subjects/search}" method="get" class="form-inline">
+										<div class="input-group" style="width: 100%;">
+											<input type="text" name="keyword" class="form-control" 
+												placeholder="搜索受试者（姓名、邮箱、健康状况）" th:value="${keyword}">
+											<div class="input-group-append">
+												<button type="submit" class="btn btn-primary">
+													<i class="bi bi-search"></i> 搜索
+												</button>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<p class="card-title mb-0">受试者列表</p>
+									<div class="table-responsive">
+										<table class="table table-striped table-borderless">
+											<thead>
+												<tr>
+													<th>编号</th>
+													<th>姓名</th>
+													<th>邮箱</th>
+													<th>年龄</th>
+													<th>性别</th>
+													<th>健康状况</th>
+													<th>状态</th>
+													<th>操作</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="subject : ${subjects}">
+													<td th:text="${subject.id}"></td>
+													<td th:text="${subject.name}"></td>
+													<td th:text="${subject.email}"></td>
+													<td th:text="${subject.age != null ? subject.age : '-'}"></td>
+													<td>
+														<span th:if="${subject.gender == 'M'}">男</span>
+														<span th:if="${subject.gender == 'F'}">女</span>
+														<span th:if="${subject.gender != 'M' && subject.gender != 'F'}" th:text="${subject.gender}"></span>
+													</td>
+													<td th:text="${subject.healthConditions != null ? #strings.abbreviate(subject.healthConditions, 30) : '无'}"></td>
+													<td>
+														<label th:if="${subject.status}" class="badge badge-success">活跃</label>
+														<label th:if="${!subject.status}" class="badge badge-danger">非活跃</label>
+													</td>
+													<td>
+														<a th:href="@{/subjects/view/{id}(id=${subject.id})}" class="btn btn-sm btn-info">
+															<i class="bi bi-eye"></i> 查看
+														</a>
+														<a th:href="@{/subjects/edit/{id}(id=${subject.id})}" class="btn btn-sm btn-warning">
+															<i class="bi bi-pencil"></i> 编辑
+														</a>
+													</td>
+												</tr>
+												<tr th:if="${#lists.isEmpty(subjects)}">
+													<td colspan="8" class="text-center">暂无受试者数据</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- Plugin js for this page -->
+	<script th:src="@{/vendors/datatables.net/jquery.dataTables.js}"></script>
+	<script
+		th:src="@{/vendors/datatables.net-bs4/dataTables.bootstrap4.js}"></script>
+	<script th:src="@{/js/dataTables.select.min.js}"></script>
+	<!-- End plugin js for this page -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+</body>
+
+</html>

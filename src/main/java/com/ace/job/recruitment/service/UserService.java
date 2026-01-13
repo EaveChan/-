@@ -30,4 +30,10 @@ public interface UserService {
 
 	List<User> getInterviewers(int departmentId);
 
+	User getUserByEmailSingle(String email);
+
+	List<User> getUsersByRole(String role);
+
+	List<User> searchSubjects(String keyword);
+
 }

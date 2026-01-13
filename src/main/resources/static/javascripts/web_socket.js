@@ -1,4 +1,4 @@
-var socket = new SockJS('/websocket');
+var socket = new SockJS('/ws');
 var stompClient = Stomp.over(socket);
 
 stompClient.connect({}, function(frame) {
@@ -25,31 +25,41 @@ function fetchNotifications() {
 				notificationList.prepend(listItem);
 			} else {
 		   notifications.forEach(function(notification) {
-          const notiMessage = notification.message;
-          const type1 = "Vacancy-Reopened:";
-          if (notification === null) {
-            listItem = $('<a>').text('No new notifications right now.')
-              .attr('href', '#')
-              .addClass('dropdown-item text-wrap');
-            notificationList.prepend(listItem);
-          }
-          if (notiMessage.includes(type1)) {
-            listItem = $('<a>').text(notification.message)
-              .attr('href', '/hr/vacancy-info/' + notification.vacancy.id + '/' + notification.id)
-              .addClass('dropdown-item text-wrap');
-            notificationList.prepend(listItem);
-          } else if (notification.vacancy == null) {
-            listItem = $('<a>').text(notification.message)
-              .attr('href', '/hr/candidates/' + notification.id)
-              .addClass('dropdown-item text-wrap');
-            notificationList.prepend(listItem);
-          } else {
-            listItem = $('<a>').text(notification.message)
-              .attr('href', '/hr/vacancy-info/' + notification.vacancy.id + '/' + notification.id)
-              .addClass('dropdown-item text-wrap');
-            notificationList.prepend(listItem);
-          }
-        });
+		        const notiMessage = notification.message;
+		        const type1 = "Vacancy-Reopened:";
+		        if (notification === null) {
+		          listItem = $('<a>').text('No new notifications right now.')
+		            .attr('href', '#')
+		            .addClass('dropdown-item text-wrap');
+		          notificationList.prepend(listItem);
+		        }
+		        if (notiMessage.includes(type1)) {
+		          listItem = $('<a>').text(notification.message)
+		            .attr('href', '/hr/vacancy-info/' + notification.vacancy.id + '/' + notification.id)
+		            .addClass('dropdown-item text-wrap');
+		          notificationList.prepend(listItem);
+		        } else if (notification.clinicalTrial) {
+		          listItem = $('<a>').text(notification.message)
+		            .attr('href', '/trials/' + notification.clinicalTrial.id + '/' + notification.id)
+		            .addClass('dropdown-item text-wrap');
+		          notificationList.prepend(listItem);
+		        } else if (notification.enrollmentApplication) {
+		          listItem = $('<a>').text(notification.message)
+		            .attr('href', '/enroll/enrollments/' + notification.enrollmentApplication.id + '/' + notification.id)
+		            .addClass('dropdown-item text-wrap');
+		          notificationList.prepend(listItem);
+		        } else if (notification.vacancy == null) {
+		          listItem = $('<a>').text(notification.message)
+		            .attr('href', '/hr/candidates/' + notification.id)
+		            .addClass('dropdown-item text-wrap');
+		          notificationList.prepend(listItem);
+		        } else {
+		          listItem = $('<a>').text(notification.message)
+		            .attr('href', '/hr/vacancy-info/' + notification.vacancy.id + '/' + notification.id)
+		            .addClass('dropdown-item text-wrap');
+		          notificationList.prepend(listItem);
+		        }
+		      });
 
 			}
 

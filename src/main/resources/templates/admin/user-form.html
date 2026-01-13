@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title th:text="${isEdit ? '编辑用户' : '新建用户'} + ' - 临床受试者智能匹配与管理系统'"></title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold" th:text="${isEdit ? '编辑用户' : '新建用户'}"></h3>
+									<h6 class="font-weight-normal mb-0">填写用户信息</h6>
+								</div>
+								<div class="col-12 col-xl-4">
+									<div class="justify-content-end d-flex">
+										<a th:href="@{/admin/user-management/list}" class="btn btn-sm btn-light btn-icon-text border-0">
+											<i class="bi bi-arrow-left btn-icon-prepend"></i> 返回列表
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 错误消息 -->
+					<div th:if="${error}" class="alert alert-danger alert-dismissible fade show" role="alert">
+						<span th:text="${error}"></span>
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					
+					<div class="row">
+						<div class="col-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<form th:action="${isEdit ? '/admin/user-management/edit/' + user.id : '/admin/user-management/add'}" 
+										  th:object="${user}" method="post" class="forms-sample">
+										
+										<div class="form-group">
+											<label for="name">姓名 <span class="text-danger">*</span></label>
+											<input type="text" class="form-control" id="name" 
+												   th:field="*{name}" placeholder="请输入姓名" required>
+										</div>
+										
+										<div class="form-group">
+											<label for="email">邮箱 <span class="text-danger">*</span></label>
+											<input type="email" class="form-control" id="email" 
+												   th:field="*{email}" placeholder="请输入邮箱" required>
+										</div>
+										
+										<div class="form-group">
+											<label for="password">密码 <span th:if="${!isEdit}" class="text-danger">*</span></label>
+											<input type="password" class="form-control" id="password" 
+												   th:field="*{password}" placeholder="请输入密码" 
+												   th:required="${!isEdit}">
+											<small class="form-text text-muted" th:if="${isEdit}">
+												留空表示不修改密码
+											</small>
+										</div>
+										
+										<div class="form-group">
+											<label for="role">角色 <span class="text-danger">*</span></label>
+											<select class="form-control" id="role" th:field="*{role}" required>
+												<option value="">请选择角色</option>
+												<option value="Admin">管理员</option>
+												<option value="RESEARCH_ASSISTANT">研究助理</option>
+												<option value="PARTICIPANT">受试者</option>
+											</select>
+										</div>
+										
+										<button type="submit" class="btn btn-primary mr-2">
+											<i class="bi bi-check-circle"></i> 保存
+										</button>
+										<a th:href="@{/admin/user-management/list}" class="btn btn-light">
+											<i class="bi bi-x-circle"></i> 取消
+										</a>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+</body>
+
+</html>

@@ -34,9 +34,24 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 		}
 
 		for (GrantedAuthority authority : authorities) {
-			if (authority.getAuthority().equals("Admin") || authority.getAuthority().equals("Default-Admin")
-					|| authority.getAuthority().equals("Senior-HR") || authority.getAuthority().equals("Junior-HR")) {
-				response.sendRedirect("/hr/dashboard");
+			// 系统管理员跳转到系统概览页面
+			if (authority.getAuthority().equals("Admin") || authority.getAuthority().equals("Default-Admin")) {
+				response.sendRedirect("/admin/overview");
+				return;
+			} 
+			// 研究助理跳转到研究助理端
+			else if (authority.getAuthority().equals("RESEARCH_ASSISTANT")) {
+				response.sendRedirect("/trials");
+				return;
+			}
+			// 受试者跳转到受试者端
+			else if (authority.getAuthority().equals("PARTICIPANT")) {
+				response.sendRedirect("/participant");
+				return;
+			}
+			// 旧的角色（兼容性保留）
+			else if (authority.getAuthority().equals("Senior-HR") || authority.getAuthority().equals("Junior-HR")) {
+				response.sendRedirect("/dashboard");
 				return;
 			} else if (authority.getAuthority().equals("Interviewer")
 					|| authority.getAuthority().equals("Department-head")) {
@@ -51,7 +66,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 	private boolean userIsBanned(HttpServletRequest request) {
 		String username = request.getParameter("username");
 		User user = userRepository.findAllByEmailAndStatusIsFalse(username);
-		if (user.isStatus()) {
+		if (user != null && !user.isStatus()) {
 			return true;
 		}
 		return false;

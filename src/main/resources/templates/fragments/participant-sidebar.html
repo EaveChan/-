@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<style>
+	/* 确保只有选中的菜单项有深色背景 */
+	.sidebar .nav-item .nav-link {
+		background-color: transparent !important;
+		color: #6c7293 !important;
+	}
+	
+	.sidebar .nav-item.active .nav-link {
+		background-color: #4B49AC !important;
+		color: #ffffff !important;
+	}
+	
+	.sidebar .nav-item.active .nav-link .menu-icon {
+		color: #ffffff !important;
+	}
+	
+	.sidebar .nav-item .nav-link .menu-icon {
+		color: #6c7293 !important;
+	}
+</style>
+</head>
+<body>
+	<nav class="sidebar sidebar-offcanvas" id="sidebar" th:fragment="sidebar">
+		<ul class="nav">
+			<li class="nav-item" id="nav-home">
+				<a class="nav-link" th:href="@{/participant}">
+					<i class="bi bi-house menu-icon"></i>
+					<span class="menu-title">首页</span>
+				</a>
+			</li>
+			<li class="nav-item" id="nav-trials">
+				<a class="nav-link" th:href="@{/participant/trials}">
+					<i class="bi bi-clipboard-check menu-icon"></i>
+					<span class="menu-title">临床试验报名</span>
+				</a>
+			</li>
+			<li class="nav-item" id="nav-applications">
+				<a class="nav-link" th:href="@{/participant/my-applications}">
+					<i class="bi bi-person-check menu-icon"></i>
+					<span class="menu-title">我的报名</span>
+				</a>
+			</li>
+			<li class="nav-item" id="nav-profile">
+				<a class="nav-link" th:href="@{/participant/profile}">
+					<i class="bi bi-person-circle menu-icon"></i>
+					<span class="menu-title">个人信息</span>
+				</a>
+			</li>
+		</ul>
+	</nav>
+	
+	<script>
+		// 根据当前 URL 设置菜单选中状态
+		(function() {
+			var path = window.location.pathname;
+			
+			// 移除所有选中状态
+			var navItems = document.querySelectorAll('#sidebar .nav-item');
+			navItems.forEach(function(item) {
+				item.classList.remove('active');
+			});
+			
+			// 根据路径设置选中状态
+			var activeNav = null;
+			if (path === '/participant' || path === '/participant/') {
+				activeNav = document.getElementById('nav-home');
+			} else if (path.indexOf('/participant/trials') === 0) {
+				activeNav = document.getElementById('nav-trials');
+			} else if (path.indexOf('/participant/my-applications') === 0) {
+				activeNav = document.getElementById('nav-applications');
+			} else if (path.indexOf('/participant/profile') === 0) {
+				activeNav = document.getElementById('nav-profile');
+			}
+			
+			if (activeNav) {
+				activeNav.classList.add('active');
+			}
+		})();
+	</script>
+</body>
+</html>

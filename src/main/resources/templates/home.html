@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>临床受试者智能匹配与管理系统</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.4/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+        .hero-section h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .hero-section p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        .feature-section {
+            padding: 80px 0;
+        }
+        .feature-card {
+            text-align: center;
+            padding: 30px;
+        }
+        .footer {
+            background-color: #343a40;
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-section">
+        <div class="container">
+            <h1>临床受试者智能匹配与管理系统</h1>
+            <p>利用先进的算法，为临床试验快速找到最合适的受试者，提高研究效率和准确性</p>
+            <div class="mt-4">
+                <a href="/login" class="btn btn-light btn-lg mr-3">进入仪表板</a>
+                <a href="/trials" class="btn btn-outline-light btn-lg">浏览临床试验</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="feature-section">
+        <div class="container">
+            <h2 class="text-center mb-5">系统功能</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <div class="card-icon text-primary">
+                                <i class="fas fa-flask"></i>
+                            </div>
+                            <h3>临床试验管理</h3>
+                            <p>创建、编辑、查看和管理临床试验，包括试验类型、持续时间、预期受试者数量等详细信息</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <div class="card-icon text-success">
+                                <i class="fas fa-user-md"></i>
+                            </div>
+                            <h3>受试者管理</h3>
+                            <p>管理受试者信息，包括基本信息、健康状况、医学史等，支持添加、编辑、查看和搜索功能</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <div class="card-icon text-info">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h3>智能匹配算法</h3>
+                            <p>基于多因素评分系统，为每个受试者计算匹配分数，快速找到最适合的临床试验</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <div class="card-icon text-warning">
+                                <i class="fas fa-user-check"></i>
+                            </div>
+                            <h3>入组管理</h3>
+                            <p>处理受试者的入组申请，查看申请状态，管理入组流程</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <div class="card-icon text-danger">
+                                <i class="fas fa-chart-pie"></i>
+                            </div>
+                            <h3>数据统计与分析</h3>
+                            <p>通过仪表板查看临床试验进展、受试者匹配情况、入组率等统计数据</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <div class="card-icon text-secondary">
+                                <i class="fas fa-shield-alt"></i>
+                            </div>
+                            <h3>安全与隐私</h3>
+                            <p>严格的权限控制和数据保护措施，确保受试者数据的隐私和安全</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="container">
+            <p>&copy; 2026 临床受试者智能匹配与管理系统. 保留所有权利.</p>
+        </div>
+    </div>
+</body>
+</html>

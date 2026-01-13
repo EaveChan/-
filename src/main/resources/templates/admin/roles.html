@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>角色权限管理 - 临床受试者智能匹配与管理系统</title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">角色与权限管理</h3>
+									<h6 class="font-weight-normal mb-0">查看系统角色及其权限配置</h6>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 权限说明 -->
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<div class="alert alert-info" role="alert">
+										<i class="bi bi-info-circle"></i>
+										<strong>权限控制说明：</strong>
+										系统采用基于角色的访问控制（RBAC）模型，权限通过后端角色注解方式实现。
+										前端根据用户角色展示或隐藏相应的菜单项和功能。
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 角色权限表格 -->
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">角色权限列表</h4>
+									<div class="table-responsive">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th>角色名称</th>
+													<th>角色标识</th>
+													<th>权限列表</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="role : ${rolePermissions}">
+													<td>
+														<span th:if="${role.roleName == 'Admin'}" class="badge badge-danger badge-pill" style="font-size: 1rem; padding: 0.5rem 1rem;">
+															<i class="bi bi-shield-fill"></i> <span th:text="${role.roleDisplayName}"></span>
+														</span>
+														<span th:if="${role.roleName == 'RESEARCH_ASSISTANT'}" class="badge badge-info badge-pill" style="font-size: 1rem; padding: 0.5rem 1rem;">
+															<i class="bi bi-person-badge"></i> <span th:text="${role.roleDisplayName}"></span>
+														</span>
+														<span th:if="${role.roleName == 'PARTICIPANT'}" class="badge badge-primary badge-pill" style="font-size: 1rem; padding: 0.5rem 1rem;">
+															<i class="bi bi-person"></i> <span th:text="${role.roleDisplayName}"></span>
+														</span>
+													</td>
+													<td>
+														<code th:text="${role.roleName}"></code>
+													</td>
+													<td>
+														<span th:each="permission, iterStat : ${role.permissions}" class="badge badge-light mr-1 mb-1" style="font-size: 0.9rem;">
+															<i class="bi bi-check-circle text-success"></i> <span th:text="${permission}"></span>
+														</span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<!-- 角色详细说明 -->
+					<div class="row">
+						<div class="col-md-4 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">
+										<span class="badge badge-danger">系统管理员</span>
+									</h5>
+									<p class="card-description">负责系统层面的运行维护与安全管理</p>
+									<ul class="list-unstyled">
+										<li><i class="bi bi-check text-success"></i> 系统概览</li>
+										<li><i class="bi bi-check text-success"></i> 用户管理</li>
+										<li><i class="bi bi-check text-success"></i> 角色权限管理</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">
+										<span class="badge badge-info">研究助理</span>
+									</h5>
+									<p class="card-description">负责临床试验管理和受试者匹配</p>
+									<ul class="list-unstyled">
+										<li><i class="bi bi-check text-success"></i> 临床试验管理</li>
+										<li><i class="bi bi-check text-success"></i> 受试者管理</li>
+										<li><i class="bi bi-check text-success"></i> 智能匹配</li>
+										<li><i class="bi bi-check text-success"></i> 入组管理</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-4 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h5 class="card-title">
+										<span class="badge badge-primary">受试者</span>
+									</h5>
+									<p class="card-description">参与临床试验的志愿者</p>
+									<ul class="list-unstyled">
+										<li><i class="bi bi-check text-success"></i> 查看临床试验</li>
+										<li><i class="bi bi-check text-success"></i> 报名试验</li>
+										<li><i class="bi bi-check text-success"></i> 查看个人信息</li>
+										<li><i class="bi bi-check text-success"></i> 查看报名状态</li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+</body>
+
+</html>

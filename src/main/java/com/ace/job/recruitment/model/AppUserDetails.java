@@ -1,5 +1,6 @@
 package com.ace.job.recruitment.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -20,17 +21,14 @@ public class AppUserDetails implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-
-		return List.of(new SimpleGrantedAuthority(user.getRole()));
+		List<GrantedAuthority> authorities = new ArrayList<>();
+		authorities.add(new SimpleGrantedAuthority(user.getRole()));
+		return authorities;
 	}
 
 	@Override
 	public String getPassword() {
 		return user.getPassword();
-	}
-
-	public int getDepartmentId() {
-		return user.getDepartment().getId();
 	}
 
 	public String getRole() {

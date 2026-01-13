@@ -1,0 +1,209 @@
+/* 受试者端移动适配样式 */
+
+/* 隐藏PC端侧边栏和顶部栏在移动端 */
+@media (max-width: 767px) {
+	/* 隐藏侧边栏 */
+	.sidebar {
+		display: none !important;
+	}
+	
+	/* 隐藏顶部栏 */
+	.navbar {
+		display: none !important;
+	}
+	
+	/* 主面板占满全屏 */
+	.page-body-wrapper {
+		padding-left: 0 !important;
+		padding-top: 0 !important;
+	}
+	
+	.main-panel {
+		width: 100% !important;
+		margin-left: 0 !important;
+	}
+	
+	/* 内容区域优化 */
+	.content-wrapper {
+		padding: 1rem !important;
+		padding-bottom: 80px !important;
+	}
+	
+	/* 标题优化 */
+	h3.font-weight-bold {
+		font-size: 1.5rem !important;
+	}
+	
+	h6.font-weight-normal {
+		font-size: 0.875rem !important;
+	}
+	
+	/* 卡片优化 */
+	.card {
+		margin-bottom: 1rem !important;
+		border-radius: 12px !important;
+		box-shadow: 0 2px 8px rgba(0,0,0,0.1) !important;
+	}
+	
+	.card-body {
+		padding: 1rem !important;
+	}
+	
+	.card-title {
+		font-size: 1.1rem !important;
+	}
+	
+	/* 按钮优化 */
+	.btn {
+		padding: 0.75rem 1.5rem !important;
+		font-size: 1rem !important;
+		border-radius: 8px !important;
+		width: 100%;
+		margin-bottom: 0.5rem;
+	}
+	
+	.btn-sm {
+		padding: 0.5rem 1rem !important;
+		font-size: 0.875rem !important;
+	}
+	
+	/* 徽章优化 */
+	.badge {
+		font-size: 0.875rem !important;
+		padding: 0.5rem 0.75rem !important;
+	}
+	
+	.badge-lg {
+		font-size: 1rem !important;
+		padding: 0.6rem 1rem !important;
+	}
+	
+	/* 网格优化 */
+	.row {
+		margin-left: -0.5rem !important;
+		margin-right: -0.5rem !important;
+	}
+	
+	.col-md-3, .col-md-4, .col-md-6, .col-md-12 {
+		padding-left: 0.5rem !important;
+		padding-right: 0.5rem !important;
+	}
+	
+	/* 统计卡片优化 */
+	.tale-bg {
+		min-height: 150px !important;
+	}
+	
+	.tale-bg h2 {
+		font-size: 2rem !important;
+	}
+	
+	/* 表单优化 */
+	.form-control {
+		font-size: 1rem !important;
+		padding: 0.75rem !important;
+		border-radius: 8px !important;
+	}
+	
+	.form-group label {
+		font-size: 1rem !important;
+		font-weight: 500 !important;
+	}
+	
+	/* 警告框优化 */
+	.alert {
+		font-size: 0.875rem !important;
+		padding: 0.75rem !important;
+		border-radius: 8px !important;
+	}
+	
+	/* 列表优化 */
+	.list-unstyled li {
+		padding: 0.5rem 0 !important;
+		font-size: 0.875rem !important;
+	}
+	
+	/* 图标优化 */
+	.bi {
+		vertical-align: middle;
+	}
+	
+	/* 移除不必要的间距 */
+	.grid-margin {
+		margin-bottom: 1rem !important;
+	}
+	
+	/* 智能匹配说明卡片优化 */
+	.bg-gradient-info {
+		padding: 1rem !important;
+	}
+	
+	.bg-gradient-info .row {
+		margin-top: 0.5rem !important;
+	}
+	
+	.bg-gradient-info .col-md-4 {
+		margin-bottom: 0.5rem;
+	}
+	
+	/* 试验详情优化 */
+	.card-description {
+		font-size: 0.875rem !important;
+		line-height: 1.5 !important;
+	}
+	
+	/* 表格优化 - 改为卡片式布局 */
+	.table-responsive {
+		overflow-x: auto !important;
+		-webkit-overflow-scrolling: touch !important;
+	}
+	
+	.table {
+		font-size: 0.875rem !important;
+	}
+	
+	.table td, .table th {
+		padding: 0.5rem !important;
+		white-space: nowrap;
+	}
+}
+
+/* 平板端优化 (768px - 991px) */
+@media (min-width: 768px) and (max-width: 991px) {
+	.content-wrapper {
+		padding: 1.5rem !important;
+	}
+	
+	.card-body {
+		padding: 1.5rem !important;
+	}
+}
+
+/* 触摸优化 */
+@media (hover: none) and (pointer: coarse) {
+	/* 增加可点击区域 */
+	.btn, .mobile-nav-item, a {
+		min-height: 44px;
+		min-width: 44px;
+	}
+	
+	/* 移除悬停效果 */
+	.btn:hover, .card:hover {
+		transform: none !important;
+	}
+}
+
+/* 横屏优化 */
+@media (max-width: 767px) and (orientation: landscape) {
+	.mobile-bottom-nav {
+		height: 50px !important;
+	}
+	
+	.mobile-nav-item i {
+		font-size: 1.25rem !important;
+	}
+	
+	.mobile-nav-item span {
+		font-size: 0.7rem !important;
+	}
+}

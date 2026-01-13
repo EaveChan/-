@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="www.thymeleaf.org">
+
+<head>
+<!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport"
+	content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<title>受试者详情 - 临床受试者智能匹配与管理系统</title>
+<!-- plugins:css -->
+<link rel="stylesheet" th:href="@{/vendors/feather/feather.css}">
+<link rel="stylesheet"
+	th:href="@{/vendors/ti-icons/css/themify-icons.css}">
+<link rel="stylesheet" th:href="@{/vendors/css/vendor.bundle.base.css}">
+<!-- endinject -->
+<!-- inject:css -->
+<link rel="stylesheet" th:href="@{/css/vertical-layout-light/style.css}">
+<link rel="stylesheet"
+	href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<!-- endinject -->
+<link rel="shortcut icon" th:href="@{/images/Ace_Favicon.png}" />
+</head>
+
+<body>
+	<div class="container-scroller">
+		<div th:replace="fragments/topbar :: topbar"></div>
+		<div class="page-body-wrapper">
+			<div th:replace="fragments/sidebar :: sidebar"></div>
+			<div class="main-panel">
+				<div class="content-wrapper">
+					<div class="row">
+						<div class="col-md-12 grid-margin">
+							<div class="row">
+								<div class="col-12 col-xl-8 mb-4 mb-xl-0">
+									<h3 class="font-weight-bold">受试者详情</h3>
+									<h6 class="font-weight-normal mb-0">查看受试者完整信息</h6>
+								</div>
+								<div class="col-12 col-xl-4">
+									<div class="justify-content-end d-flex">
+										<a th:href="@{/subjects/edit/{id}(id=${subject.id})}" class="btn btn-sm btn-warning btn-icon-text border-0 mr-2">
+											<i class="bi bi-pencil btn-icon-prepend"></i> 编辑
+										</a>
+										<a th:href="@{/subjects}" class="btn btn-sm btn-light btn-icon-text border-0">
+											<i class="bi bi-arrow-left btn-icon-prepend"></i> 返回列表
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-8 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">基本信息</h4>
+									<div class="table-responsive">
+										<table class="table">
+											<tbody>
+												<tr>
+													<td class="font-weight-bold" style="width: 30%;">姓名</td>
+													<td th:text="${subject.name}"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">邮箱</td>
+													<td th:text="${subject.email}"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">年龄</td>
+													<td th:text="${subject.age != null ? subject.age + ' 岁' : '未填写'}"></td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">性别</td>
+													<td>
+														<span th:if="${subject.gender == 'M'}">男</span>
+														<span th:if="${subject.gender == 'F'}">女</span>
+														<span th:if="${subject.gender != 'M' && subject.gender != 'F'}" th:text="${subject.gender}"></span>
+													</td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">状态</td>
+													<td>
+														<label th:if="${subject.status}" class="badge badge-success">活跃</label>
+														<label th:if="${!subject.status}" class="badge badge-danger">非活跃</label>
+													</td>
+												</tr>
+												<tr>
+													<td class="font-weight-bold">角色</td>
+													<td>
+														<span th:if="${subject.role == 'PARTICIPANT'}">受试者</span>
+														<span th:if="${subject.role != 'PARTICIPANT'}" th:text="${subject.role}"></span>
+													</td>
+												</tr>
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+						</div>
+						
+						<div class="col-md-4 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">快捷操作</h4>
+									<div class="mt-4">
+										<a th:href="@{/subjects/edit/{id}(id=${subject.id})}" class="btn btn-warning btn-block mb-2">
+											<i class="bi bi-pencil"></i> 编辑信息
+										</a>
+										<a th:href="@{/matching}" class="btn btn-primary btn-block">
+											<i class="bi bi-diagram-3"></i> 查看匹配试验
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12 grid-margin stretch-card">
+							<div class="card">
+								<div class="card-body">
+									<h4 class="card-title">健康信息</h4>
+									<div class="row">
+										<div class="col-md-6">
+											<h6 class="font-weight-bold mb-3">健康状况</h6>
+											<p th:text="${subject.healthConditions != null ? subject.healthConditions : '无'}"></p>
+										</div>
+										<div class="col-md-6">
+											<h6 class="font-weight-bold mb-3">既往病史</h6>
+											<p th:text="${subject.medicalHistory != null ? subject.medicalHistory : '无'}"></p>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<!-- plugins:js -->
+	<script th:src="@{/vendors/js/vendor.bundle.base.js}"></script>
+	<!-- endinject -->
+	<!-- inject:js -->
+	<script th:src="@{/js/off-canvas.js}"></script>
+	<script th:src="@{/js/hoverable-collapse.js}"></script>
+	<script th:src="@{/js/template.js}"></script>
+	<script th:src="@{/js/settings.js}"></script>
+	<script th:src="@{/js/todolist.js}"></script>
+	<!-- endinject -->
+</body>
+
+</html>
