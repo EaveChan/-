@@ -6,6 +6,7 @@
 - **版本**：v1.0
 - **最后更新**：2026年1月14日
 - **文档类型**：系统设计与实现文档
+- **注意**：本项目原型框架基于https://github.com/LinThitHtwe/Recruitment_Management_System_SpringBoot
 
 ---
 
